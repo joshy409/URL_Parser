@@ -16,6 +16,8 @@ int main()
 
 	while (url != "end")
 	{
+
+		//TODO: redo validation process. get all the components first then check if either scheme or netloc is empty
 		if (validURL(url))
 		{
 			cout << "\nThe URL is: " << url << endl;
@@ -24,7 +26,7 @@ int main()
 			string scheme = getScheme(url);
 			string netloc = getNetloc(url);
 			cout << "<scheme> = " << scheme << endl;
-			cout << "<netloc> = " << netloc<< endl;
+			cout << "<netloc> = " << netloc << endl;
 			cout << "<path> = " << url << endl;
 			cout << "<query> = " << query << endl;
 			cout << "<fragment> = " << fragment << endl;
@@ -38,7 +40,7 @@ int main()
 			getline(cin, url);
 		}
 	}
-		
+
 }
 
 // checks if the url valid
@@ -64,7 +66,7 @@ string getFragment(string& url)
 	{
 		fragment = "";
 	}
-	else 
+	else
 	{
 		fragment = url.substr(i + 1);
 		url = url.erase(i);
@@ -77,7 +79,7 @@ string getQuery(string& url)
 {
 	string query;
 	int i = url.find("?");
-	
+
 	if (i == -1)
 	{
 		query = "";
@@ -106,7 +108,7 @@ string getScheme(string& url)
 	}
 	return scheme;
 }
- 
+
 //get netloc from the url and chop off "/" and netloc from url
 string getNetloc(string& url)
 {
