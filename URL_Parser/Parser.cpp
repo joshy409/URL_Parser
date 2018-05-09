@@ -2,7 +2,7 @@
 #include <string>
 using namespace std;
 
-bool validURL(string url);
+bool validURL(string scheme, string netloc);
 string getFragment(string& url);
 string getQuery(string& url);
 string getScheme(string& url);
@@ -11,43 +11,41 @@ string getNetloc(string& url);
 int main()
 {
 	string url;
-	cout << "please enter a url (type 'end' to end): ";
+	cout << "Please enter a URL (type 'end' to end): ";
 	getline(cin, url);
 
 	while (url != "end")
 	{
+		cout << "\nThe URL is: " << url << endl;
+		string fragment = getFragment(url);
+		string query = getQuery(url);
+		string scheme = getScheme(url);
+		string netloc = getNetloc(url);
 
-		//TODO: redo validation process. get all the components first then check if either scheme or netloc is empty
-		if (validURL(url))
-		{
-			cout << "\nthe url is: " << url << endl;
-			string fragment = getFragment(url);
-			string query = getQuery(url);
-			string scheme = getScheme(url);
-			string netloc = getNetloc(url);
-			cout << "<scheme> = " << scheme << endl;
-			cout << "<netloc> = " << netloc << endl;
-			cout << "<path> = " << url << endl;
-			cout << "<query> = " << query << endl;
-			cout << "<fragment> = " << fragment << endl;
-			cout << "\nplease enter a url: ";
-			getline(cin, url);
-		}
-		else
-		{
-			cout << "\ninvalid url" << endl;
-			cout << "\nplease enter a valid url: ";
-			getline(cin, url);
-		}
+	if (validURL(scheme, netloc))
+	{
+		cout << "<scheme> = " << scheme << endl;
+		cout << "<netloc> = " << netloc << endl;
+		cout << "<path> = " << url << endl;
+		cout << "<query> = " << query << endl;
+		cout << "<fragment> = " << fragment << endl;
+		cout << "\nPlease enter a URL(type 'end' to end) : ";
+		getline(cin, url);
 	}
-
+	else
+	{
+		cout << "\nInvalid URL" << endl;
+		cout << "\nPlease enter a valid URL (type 'end' to end): ";
+		getline(cin, url);
+	}
+	}
 }
 
-// checks if the url valid
-bool validURL(string url)
+
+// checks if scheme or netloc is empty
+bool validURL(string scheme, string netloc)
 {
-	int i = url.find("://");
-	if (i == -1)
+	if (scheme.size() == 0 || netloc.size() == 0)
 	{
 		return false;
 	}
@@ -57,72 +55,81 @@ bool validURL(string url)
 	}
 }
 
-// gets fragment from url and chop off  "#" and the fragment from url
+// searches for "#" and gets the fragment and chops it off from url
 string getFragment(string& url)
 {
-	string fragment;
-	int i = url.find("#");
-	if (i == -1)
+	string fragment = "";
+	int fragmentindex = url.find("#");
+	if (fragmentindex == -1)
 	{
-		fragment = "";
+		return fragment;
 	}
 	else
 	{
-		fragment = url.substr(i + 1);
-		url = url.erase(i);
+		fragment = url.substr(fragmentindex + 1);
+		url.erase(fragmentindex);
+		return fragment;
 	}
-	return fragment;
 }
 
-//gets query from url and chop off "?" and the query from url
+//searches for "?" and gets the query and chops it off from url
 string getQuery(string& url)
 {
-	string query;
-	int i = url.find("?");
+	string query = "";
+	int queryindex = url.find("?");
 
-	if (i == -1)
+	if (queryindex == -1)
 	{
-		query = "";
+		return query;
 	}
 	else
 	{
-		query = url.substr(i + 1);
-		url = url.erase(i);
+		query = url.substr(queryindex + 1);
+		url.erase(queryindex);
+		return query;
 	}
-	return query;
 }
 
-// gets scheme from url and chops off "://" and the scheme from url
+// searches for ":" and gets the scheme and chops it off from url
 string getScheme(string& url)
 {
-	string scheme;
-	int i = url.find(":");
-	if (i == -1)
+	string scheme = "";
+	int schemeindex = url.find(":");
+	if (schemeindex == -1)
 	{
-		scheme = "";
+		return scheme;
 	}
 	else
 	{
-		scheme = url.substr(0, i);
-		url = url.substr(i + 3);
+		scheme = url.substr(0, schemeindex);
+		url = url.substr(schemeindex + 1);
+		return scheme;
 	}
-	return scheme;
 }
 
-//get netloc from the url and chop off "/" and netloc from url
+//searches for "//" to get netloc and "/" to get path. chops off the netloc and anything left on url is path
 string getNetloc(string& url)
 {
-	string netloc;
-	int i = url.find_first_of("/");
-	if (i == -1)
+	string netloc = "";
+	int netlocindex = url.find("//");
+	if (netlocindex == -1)
 	{
-		netloc = url.substr(0, i);
-		url = "";
+		return netloc;
 	}
 	else
 	{
-		netloc = url.substr(0, i);
-		url = url.substr(i + 1);
+		url = url.substr(netlocindex + 2);
+		int pathindex = url.find_first_of("/");
+		if ( pathindex == -1)
+		{
+			netloc = url;
+			url = "";
+		}
+		else
+		{
+			netloc = url.substr(0, pathindex);
+			url = url.substr(pathindex + 1);
+		}
+		return netloc;
 	}
-	return netloc;
 }
