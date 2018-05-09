@@ -11,14 +11,14 @@ string getNetloc(string& url);
 int main()
 {
 	string url;
-	cout << "Please enter a URL (Type 'end' to end): ";
+	cout << "please enter a url (type 'end' to end): ";
 	getline(cin, url);
 
 	while (url != "end")
 	{
 		if (validURL(url))
 		{
-			cout << "\nThe URL is: " << url << endl;
+			cout << "\nthe url is: " << url << endl;
 			string fragment = getFragment(url);
 			string query = getQuery(url);
 			string scheme = getScheme(url);
@@ -28,13 +28,13 @@ int main()
 			cout << "<path> = " << url << endl;
 			cout << "<query> = " << query << endl;
 			cout << "<fragment> = " << fragment << endl;
-			cout << "\nPlease enter a URL: ";
+			cout << "\nplease enter a url: ";
 			getline(cin, url);
 		}
 		else
 		{
-			cout << "\nInvalid URL" << endl;
-			cout << "\nPlease enter a valid URL: ";
+			cout << "\ninvalid url" << endl;
+			cout << "\nplease enter a valid url: ";
 			getline(cin, url);
 		}
 	}
